@@ -29,7 +29,7 @@ end
 	
 private
 	def booking_params
-		# params.permit(:hotell_id)
+		
 		params.require(:bookings).permit(:customer_name, :mobile_no, :room_type, :member)
 	end
 end

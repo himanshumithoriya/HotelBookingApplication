@@ -1,6 +1,11 @@
 class CustomersController < ApplicationController
-	skip_before_action :customer_authenticate_request, only: [:create, :login]
+	before_action :customer_authenticate_request
   skip_before_action :owner_authenticate_request
+
+  def index
+    @hotel = Booking.all
+    render json: @hotel
+  end
 
   def create
      @customer = Customer.new(customer_params)
@@ -12,7 +17,6 @@ class CustomersController < ApplicationController
   end
 
   def login
-    
     @customer = Customer.find_by(email: params[:email], password: params[:password])
     if @customer
       token = jwt_encode(customer_id: @customer.id)
@@ -26,9 +30,9 @@ class CustomersController < ApplicationController
     @hotel = Hotell.where(status: params[:status])
     unless @hotel.empty?
       render json: @hotel
-    else
-      render json: {error: "Hotel Unavailable"}
     end
+    rescue
+      render json: {message: "Hotel Unavailable"}
   end
 
   def search_hotel_by_name
@@ -68,31 +72,26 @@ class CustomersController < ApplicationController
   
 
   def see_bookings
+    byebug
     @bookings = @current_customer.bookings
     unless @bookings.empty?
       render json: @bookings
-    else
-      render json: {message: "No Booking found"}
     end
+    rescue
+      render json: {message: "No Booking found"}
   end
 
 
   def filter_bookings_by_location
-    # temp =ActiveRecord::Base.connection.execute("select bookings.customer_name, bookings.mobile_no from bookings inner join users on users.id = bookings.user_id inner join rooms on rooms.id = bookings.room_id inner join hotells on hotells.id = rooms.hotell_id inner join locations on locations.id = hotells.location_id where users.id = #{@current_customer.id} and locations.name = '#{params[:name]}'")
-    #  render json: temp   
-    booking = Booking.joins(room: { hotell: :location })
-      .joins("INNER JOIN users ON users.id = bookings.user_id")
-      .where(users: { id: @current_customer.id })
-      .where(locations: { name: params[:name] })
-      .pluck('bookings.customer_name, bookings.mobile_no')
-      unless booking.empty?
-        render json: booking
-      else
-        render json: {message: "booking not found"}
-      end
+    booking =ActiveRecord::Base.connection.execute("select bookings.customer_name, bookings.mobile_no from bookings inner join users on users.id = bookings.user_id inner join rooms on rooms.id = bookings.room_id inner join hotells on hotells.id = rooms.hotell_id inner join locations on locations.id = hotells.location_id where users.id = #{@current_customer.id} and locations.name = '#{params[:name]}'")
+    unless booking.empty?
+      render json: booking
+    end
+    rescue
+      render json: {message: "booking not found"}
   end
 
-  def show_booking
+  def show
     @booking = Booking.find(params[:id])
     unless @booking.nil?
       render json: @booking
@@ -101,18 +100,9 @@ class CustomersController < ApplicationController
       render json: {message: "Booking not found"}
      end
 
-  def particular_booking_details
-    booking = @current_customer.bookings.where(id: params[:id])
-    unless booking.empty?
-      render json: booking
-    else
-      render json: {message: "Booking not found with this Id"}
-    end
-  end
-
+  
   def update
     customer = Customer.find(params[:id])
-    # customer = customer.update(name: params[:name], email: params[:email], password: params[:password])
     if customer
       customer = customer.update(name: params[:name], email: params[:email], password: params[:password])
       render json: customer

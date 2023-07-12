@@ -1,20 +1,24 @@
 class HotellsController < ApplicationController
   before_action :owner_authenticate_request
 	skip_before_action :customer_authenticate_request
-	before_action :set_hotel, only: [:show]
- 
+	 
  	def index
  		@hotel = @current_owner.hotells
 		render json: @hotel
  	end
 
  	def show
- 		@hotel = @current_owner.hotells.find(id: params[:id])
- 		render json: @hotel
+ 		@hotel = @current_owner.hotells.find(params[:id])
+ 		unless @hotel.nil?
+ 			render json: @hotel
+	 	end
+	 	rescue
+	 		render json: {message: "Hotel not found"}
  	end
 
 	def create
 		@hotel = @current_owner.hotells.new(hotel_params)
+		@hotel.image.attach(params[:image])
 	  if @hotel.save
       render json: @hotel, status: :created
     else
@@ -22,11 +26,7 @@ class HotellsController < ApplicationController
     end
 	end
 
-	def show
-		 render json: @hotel, status: :ok
-	end
-
-	
+		
 	def my_hotels
 		@hotel = @current_owner.hotells
 		unless @hotel.empty?
@@ -43,7 +43,7 @@ class HotellsController < ApplicationController
 		unless @hotel.nil?
 			render json: @hotel
 		else
-			render json: {error: "Hotel Couldn't found"}
+			render json: {message: "Hotel Couldn't found"}
 		end
 	end
 
@@ -85,10 +85,7 @@ class HotellsController < ApplicationController
 
 	private
 		def hotel_params
-			params.permit(:name, :address, :contact, :status, :location_id)
+			params.permit(:name, :address, :contact, :status, :location_id, :image)
 		end
 
-		def set_hotel
-			@hotel = Hotell.find(params[:id])
-		end
-	end
+end

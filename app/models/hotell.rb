@@ -1,9 +1,11 @@
 class Hotell < ApplicationRecord
+  has_one_attached :image
+
   belongs_to :location
   belongs_to :user
 
   has_many :rooms
-  has_many :bookings, through: :rooms
+  has_many :bookings
 
   validates :name, presence: true 
   validates :address, :contact, presence: true

@@ -3,7 +3,9 @@ class RoomsController < ApplicationController
   before_action :owner_authenticate_request
   
   def create
+    
     @room = Room.new(room_params)
+    # @room = @current_owner.rooms.new(room_params)
     if @room.save
       render json: @room, status: :created
     else

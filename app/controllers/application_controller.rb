@@ -1,6 +1,9 @@
 class ApplicationController < ActionController::API
 	include JsonWebToken
-
+	before_action do
+    ActiveStorage::Current.url_options = { protocol: request.protocol, host: request.host, port: request.port }
+  end
+  
 	before_action :owner_authenticate_request
 	before_action :customer_authenticate_request
 	

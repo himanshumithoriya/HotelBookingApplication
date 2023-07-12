@@ -1,6 +1,6 @@
 class Room < ApplicationRecord
   belongs_to :hotell
-  has_many :bookings
+  has_many :bookings, through: :hotell
 
   validates :room_no, presence: true, numericality: { only_integer: true }, uniqueness: true
   validates :room_category, presence: true, inclusion: {in: %w(normal deluxe)} 

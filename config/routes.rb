@@ -22,8 +22,8 @@ Rails.application.routes.draw do
   get '/cust/search_a_hotel_with_rooms', to: 'customers#search_a_hotel_with_rooms'
   get '/cust/see_bookings', to: 'customers#see_bookings'
   get '/cust/filter_bookings_by_location', to: 'customers#filter_bookings_by_location'
-  get '/cust/show_booking', to: 'customers#show_booking'
-  get '/cust/particular_booking_details', to: 'customers#particular_booking_details'
+ 
+ 
 
   post '/book/create', to: 'bookings#create'
 end
