@@ -8,5 +8,9 @@ class Booking < ApplicationRecord
   validates :member, numericality: { only_integer: true }
   enum room_type: [:normal, :deluxe]
 
-  
+  before_save :booking_id_generator
+
+  def booking_id_generator
+    self.booking_aplhanumeric_id = SecureRandom.hex[0..7]
+  end
 end

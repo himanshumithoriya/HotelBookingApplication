@@ -5,7 +5,7 @@ class Hotell < ApplicationRecord
   belongs_to :user
 
   has_many :rooms
-  has_many :bookings
+  has_many :bookings, through: :room
 
   validates :name, presence: true 
   validates :address, :contact, presence: true

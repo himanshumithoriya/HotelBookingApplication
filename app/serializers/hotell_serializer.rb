@@ -5,9 +5,6 @@ class HotellSerializer < ActiveModel::Serializer
 
   has_many :rooms
 
-
-
-
   def image
     object.image.url
   end

@@ -1,91 +1,61 @@
 class HotellsController < ApplicationController
-  before_action :owner_authenticate_request
+	before_action :owner_authenticate_request
 	skip_before_action :customer_authenticate_request
+	before_action :set_params, only: [:show]
 	 
  	def index
- 		@hotel = @current_owner.hotells
-		render json: @hotel
+ 		@hotels = @current_owner.hotells
+		render json: @hotels
  	end
 
  	def show
- 		@hotel = @current_owner.hotells.find(params[:id])
- 		unless @hotel.nil?
- 			render json: @hotel
-	 	end
-	 	rescue
-	 		render json: {message: "Hotel not found"}
+ 		@hotel = @current_owner
+ 		return  unless @hotel.present?
+		render json: @hotel
  	end
 
 	def create
 		@hotel = @current_owner.hotells.new(hotel_params)
-		@hotel.image.attach(params[:image])
 	  if @hotel.save
       render json: @hotel, status: :created
     else
-      render json: {error: "Hotel not build"}
+      render json: { error: @hotel.errors.full_messages }
     end
 	end
 
 		
 	def my_hotels
 		@hotel = @current_owner.hotells
-		unless @hotel.empty?
-			render json: @hotel
-		else
-			render json: {error: "Hotel Closed"}
-		end
+		return render json: { message: "Hotel not found" } unless @hotel.present? 
+		render json: @hotel
 	end
 
-
-	def search_hotel
-		location = Location.find_by(name: params[:name])
-		@hotel = @current_owner.hotells.find_by(location_id: location.id)
-		unless @hotel.nil?
-			render json: @hotel
-		else
-			render json: {message: "Hotel Couldn't found"}
-		end
+	def search_hotel_by_location
+	  location = Location.where("name like ?","%#{params[:name]}%").first
+	  return render json: { message: "Location not found" } unless location.present?
+	  @hotel = @current_owner.hotells.where(location_id: location.id)
+	  return render json: { message: "Hotel couldn't be found" } unless @hotel.present?
+	  render json: @hotel
 	end
+
 
 	def search_hotel_by_name
-		unless params[:name].strip.empty?
-			@hotel = @current_owner.hotells.where("name like ?", "%"+params[:name].strip+"%")
-			unless @hotel.empty?
-				render json: @hotel
-			else
-				render json: {message: "Couldn't find hotel with this name"}
-			end
-		else
-			render json: {message: "field can't be blank"}
-		end
-		rescue
-			render json: {message: "Please pass parameter"}
+		hotel_by_name()
 	end
 	
+ 	# def see_hotel_with_room
+	#  		hotel_with_room()
+	# end
 
-	def see_hotel_with_room
-    unless params[:name].strip.empty?
-      @hotel_with_room = Hotell.where("name like ?", "%"+params[:name].strip+"%")
-      @hotel_with_room = @hotel_with_room.to_a
-      unless @hotel_with_room.empty?
-        @ids = @hotel_with_room[0][:id]
-        @hotel = Hotell.find(@ids)
-        @hotel = @hotel.rooms
-        render json: @hotel 
-      else
-        render json: {message: "Hotel Not found"}
-      end
-    else
-      render json: {message: "field can't be blank"}
-    end
-    rescue  
-      render json: {message: "please pass paramater"}
-  end
   
-
 	private
 		def hotel_params
 			params.permit(:name, :address, :contact, :status, :location_id, :image)
 		end
 
+		def set_params
+			@hotel = Hotell.find(params[:id])
+		rescue ActiveRecord::RecordNotFound
+			render json: {message: "Id not found"}	
+		end
 end
