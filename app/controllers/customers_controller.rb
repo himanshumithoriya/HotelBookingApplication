@@ -4,40 +4,32 @@ class CustomersController < ApiController
   before_action :set_params, only: [:update, :destroy]
 
   def index
-    hotels= Hotell.all
-    render json: hotels
+    hotels =  if params[:status].present?
+                open_hotel()
+              elsif params[:name].present?
+                search_hotel_by_name()
+              else
+                hotels= Hotell.all
+              end
+    if hotels.present?
+      render json: hotels, status: :ok
+    end
   end
   
   def create
-    @customer = Customer.new(customer_params)
-    return render json: @customer if @customer.save
-    render json: @customer.errors.full_messages
+    customer = Customer.new(customer_params)
+    return render json: customer, status: :created if customer.save
+    render json: customer.errors.full_messages, status: :unprocessable_entity
   end
 
   def login
-    @customer = Customer.find_by(email: params[:email], password: params[:password])
-    if @customer
-      token = jwt_encode(customer_id: @customer.id)
+    customer = Customer.find_by(email: params[:email], password: params[:password])
+    if customer
+      token = jwt_encode(customer_id: customer.id)
       render json: { token: token }, status: :ok
     else
       render json: { error: 'Unauthorized user' }, status: :unauthorized
     end
-  end
-
-  def open_hotel
-    unless params[:status].strip.empty?
-      @hotel = Hotell.where(status: params[:status])
-      return render json: {message: 'Hotel Unavailable'} unless @hotel.present?  
-      render json: @hotel
-    else
-      render json: { message: 'field can not be blank' }
-    end
-  rescue
-    render json: {message: 'Pass parameter'}
-  end
-
-  def search_hotel_by_name
-    hotel_by_name()
   end
 
   def update
@@ -52,7 +44,7 @@ class CustomersController < ApiController
   def destroy
     if @customer
       customer = @customer.destroy
-      render json: { message: 'Customer deleted' }
+      render json: { message: 'Customer deleted' }, status: :deleted
     end
   rescue
     render json: { message: 'Customer deletion failed' }
@@ -68,5 +60,9 @@ class CustomersController < ApiController
       @customer = Customer.find(params[:id])
     rescue ActiveRecord::RecordNotFound
       render json: { message: 'Id not found' }  
+    end
+
+    def open_hotel
+      hotels = Hotell.where(status: params[:status])
     end
 end

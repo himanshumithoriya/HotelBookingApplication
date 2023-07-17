@@ -259,6 +259,7 @@ DEPENDENCIES
   debug
   devise
   jwt
+  kaminari
   puma (~> 5.0)
   rails (~> 7.0.6)
   sass-rails

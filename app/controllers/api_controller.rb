@@ -24,17 +24,10 @@ class ApiController < ActionController::API
 			render json: {message: "Invalid Token"}
 		end		
 
-		def hotel_by_name
-			unless params[:name].strip.empty?
-		    @hotel = Hotell.where("name like ?", "%"+params[:name]+"%")
-		    return render json: {message: "Couldn't find any hotel with this name"} unless @hotel.present?
-		      render json: @hotel
-	    else
-		      render json: {message: "field can't be blank"}
-	    end
-	  rescue
-	    render json: {message: "Please pass parameter"}
-		end
+		def search_hotel_by_name
+	    hotels = Hotell.where("name like ?", "%"+params[:name]+"%")
+	end
+
 
 		before_action do
     	ActiveStorage::Current.url_options = { protocol: request.protocol, host: request.host, port: request.port }

@@ -5,12 +5,12 @@ class LocationsController < ApiController
 	
 	def index
 		locations = Location.all
-		render json: locations
+		render json: locations, status: :ok
 	end
 
 	def show
 		if @location
-			render json: @location
+			render json: @location, status: :ok
 		end
 	end
 

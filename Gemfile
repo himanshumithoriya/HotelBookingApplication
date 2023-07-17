@@ -9,6 +9,8 @@ gem "devise"
 gem "activeadmin"
 gem "sass-rails"
 
+gem 'kaminari'
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.6"
 

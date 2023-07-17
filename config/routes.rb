@@ -27,9 +27,6 @@ Rails.application.routes.draw do
   
  
   resources :bookings
-  # get '/book/see_bookings', to: 'bookings#see_bookings'
   get '/book/filter_bookings_by_location', to: 'bookings#filter_bookings_by_location'
- 
-
-  post '/book/create', to: 'bookings#create'
+   
 end

@@ -1,18 +1,23 @@
 class RoomsController < ApiController
   skip_before_action :customer_authenticate_request
   
+  def index
+    rooms = Room.all
+    render json: rooms
+  end
+
   def create
-    @room = Room.new(room_params)
-    if @room.save
-      render json: @room, status: :created
+    room = Room.new(room_params)
+    if room.save
+      render json: room, status: :created
     else
-      render json: { data: @room.errors.full_messages }, status: :unprocessable_entity
+      render json: { data: room.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   def room_list_by_hotell_id
     rooms = Room.where(hotell_id: params[:hotell_id])
-    render json: rooms
+    render json: rooms, status: :ok
   end
 
   private

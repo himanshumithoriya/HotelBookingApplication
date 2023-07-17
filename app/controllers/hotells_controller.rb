@@ -3,26 +3,19 @@ class HotellsController < ApiController
 	before_action :set_params, only: [:show, :destroy]
 	 
  	def index
- 		if
- 			location = Location.where("name like ?","%#{params[:name]}%").first
-		  return render json: { message: "Location not found" } unless location.present?
-		  hotels = @current_owner.hotells.where("location_id = ? OR location_id in (
- 			 select id from locations where name like ?)", location.id, "%#{params[:name]}%")
-			return render json: { message: "Hotels couldn't be found" } unless hotels.present?
-		  render json: hotels
-		else
-			if 
-				hotel_by_name()
-			else
-		 		hotels = @current_owner.hotells
-				render json: hotels
-			end
-		end
+		hotels =	if params[:location].present?
+			 			 		search_hotel_by_location()
+					  	elsif params[:name].present?
+								search_hotel_by_name()
+							else
+								hotels = Hotell.all
+							end 
+	  render json: hotels 
  	end
 
  	def show
  		hotel = @current_owner.hotells
- 		return  unless hotel.present?
+ 		return unless hotel.present?
 		render json: hotel
  	end
 
@@ -31,26 +24,14 @@ class HotellsController < ApiController
 	  if hotel.save
       render json: hotel, status: :created
     else
-      render json: { error: hotel.errors.full_messages }
+      render json: { error: hotel.errors.full_messages }, status: :unprocessable_entity
     end
 	end
 		
-	def search_hotel_by_location
-	  location = Location.where("name like ?","%#{params[:name]}%").first
-	  return render json: { message: "Location not found" } unless location.present?
-	  hotel = @current_owner.hotells.where(location_id: location.id)
-	  return render json: { message: "Hotel couldn't be found" } unless hotel.present?
-	  render json: hotel
-	end
-
-	def search_hotel_by_name
-		hotel_by_name()
-	end
-
 	def destroy
 		if @hotel
 			@hotel.destroy
-			render json: { message: "Hotel Deleted !!!" }
+			render json: { message: "Hotel Deleted !!!" }, status: :ok
 		end
 	end
 	
@@ -64,5 +45,9 @@ class HotellsController < ApiController
 			@hotel = @current_owner.hotells.find(params[:id])
 		rescue ActiveRecord::RecordNotFound
 			render json: {message: "Id not found"}	
+		end
+
+		def search_hotel_by_location
+		  hotels = Hotell.joins(:location).where('locations.name like ?', "%#{params[:location]}%")
 		end
 end
