@@ -1,4 +1,4 @@
-class LocationsController < ApplicationController
+class LocationsController < ApiController
 	skip_before_action :owner_authenticate_request
 	skip_before_action :customer_authenticate_request
 	before_action :set_params, only: [:show]

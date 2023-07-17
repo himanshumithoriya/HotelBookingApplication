@@ -5,6 +5,10 @@ ruby "3.2.2"
 
 gem "active_model_serializers"
 
+gem "devise"
+gem "activeadmin"
+gem "sass-rails"
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.6"
 

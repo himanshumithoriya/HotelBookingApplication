@@ -1,4 +1,4 @@
-class OwnersController < ApplicationController
+class OwnersController < ApiController
   skip_before_action :owner_authenticate_request, only: [:create, :login]
   skip_before_action :customer_authenticate_request
 

@@ -1,11 +1,11 @@
-class CustomersController < ApplicationController
+class CustomersController < ApiController
   skip_before_action :customer_authenticate_request, only: [:create, :login]
   skip_before_action :owner_authenticate_request
   before_action :set_params, only: [:update, :destroy]
 
   def index
-    @hotel = Booking.all
-    render json: @hotel
+    hotels= Hotell.all
+    render json: hotels
   end
   
   def create
@@ -39,10 +39,6 @@ class CustomersController < ApplicationController
   def search_hotel_by_name
     hotel_by_name()
   end
-
-  # def search_a_hotel_with_rooms
-  #   hotel_with_room()
-  # end
 
   def update
     if @customer

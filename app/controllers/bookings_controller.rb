@@ -1,16 +1,17 @@
-class BookingsController < ApplicationController
+class BookingsController < ApiController
 	skip_before_action :owner_authenticate_request
-	before_action :set_params, only: [:show]
+	before_action :set_params, only: [:show, :destroy]
 
 	def create
 		hotel = Hotell.find_by(id: params[:bookings][:hotell_id])
 		member = params[:bookings][:member]
 		required_rooms = (member / 2) + (member % 2)
-		avl_rooms = hotel.rooms.where(status: "available").where(room_category: params[:bookings][:room_type]).length
+		rooms = hotel.rooms.where(status: "available").where(room_category: params[:bookings][:room_type])
+		avl_rooms = rooms.count
 		if avl_rooms < required_rooms
 			render json: {message: "Rooms not available"}
 		else
-			rooms = hotel.rooms.where(status: 'available').where(room_category: params[:bookings][:room_type]).limit(required_rooms)
+			rooms = rooms.limit(required_rooms)
 			rooms.each do |room|
 				@booking = @current_customer.bookings.new(booking_params)
 				@booking.room_id = room.id
@@ -24,20 +25,27 @@ class BookingsController < ApplicationController
 		end 
 	end
 
-	def see_bookings
+	def index
     @bookings = @current_customer.bookings
     return render json: { message: 'No Booking found' } unless @bookings.present?
     render json: @bookings
   end
 
   def filter_bookings_by_location
-    booking =ActiveRecord::Base.connection.execute("select bookings.customer_name, bookings.mobile_no from bookings inner join users on users.id = bookings.user_id inner join rooms on rooms.id = bookings.room_id inner join hotells on hotells.id = rooms.hotell_id inner join locations on locations.id = hotells.location_id where users.id = #{@current_customer.id} and locations.name = '#{params[:name]}'")
+    booking =ActiveRecord::Base.connection.execute("select rooms.room_no, bookings.booking_aplhanumeric_id, bookings.member from bookings INNER JOIN users on users.id = bookings.user_id INNER JOIN rooms on rooms.id = bookings.room_id INNER JOIN hotells on hotells.id = rooms.hotell_id INNER JOIN locations on locations.id = hotells.location_id where users.id = #{@current_customer.id} and locations.name like '%#{params[:name]}%'")
     return render json: { message: 'booking not found' } unless booking.present?
     render json: booking
   end
 
   def show
     return render json: @booking if @booking.present?
+  end
+
+  def destroy
+  	if @booking
+  		booking = @booking.destroy
+  		render json: { message: "Booking deleted" }
+  	end
   end
 
 	private

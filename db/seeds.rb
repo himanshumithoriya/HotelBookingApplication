@@ -9,3 +9,5 @@ Location.create(name:"Indore")
 Location.create(name:"Bhopal")
 Location.create(name:"Mumbai")
 Location.create(name:"Delhi")
+Location.create(name:"Indoriaa")
+AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?

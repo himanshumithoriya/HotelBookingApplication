@@ -1,5 +1,5 @@
 class BookingSerializer < ActiveModel::Serializer
-  attributes :customer_name, :mobile_no, :member, :booking_aplhanumeric_id, :room_no, :hotel
+  attributes :id, :member, :booking_aplhanumeric_id, :room_no, :hotel
 
   def room_no
     object.room.room_no
@@ -8,6 +8,4 @@ class BookingSerializer < ActiveModel::Serializer
   def hotel
     object.room.hotell.name
   end
-  # belongs_to :user
-  # belongs_to :room
 end
