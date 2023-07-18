@@ -5,7 +5,7 @@ ActiveAdmin.register Booking do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-  # permit_params :customer_name, :mobile_no, :room_type, :member, :user_id, :room_id, :booking_aplhanumeric_id
+  permit_params :customer_name, :mobile_no, :room_type, :member, :user_id, :room_id, :booking_aplhanumeric_id
   #
   # or
   #

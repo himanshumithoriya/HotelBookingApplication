@@ -5,7 +5,7 @@ ActiveAdmin.register Hotell do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-  # permit_params :name, :address, :contact, :status, :location_id, :user_id
+  permit_params :name, :address, :contact, :status, :location_id, :user_id
   #
   # or
   #
