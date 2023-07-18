@@ -1,11 +1,6 @@
 class RoomsController < ApiController
   skip_before_action :customer_authenticate_request
   
-  def index
-    rooms = Room.all
-    render json: rooms
-  end
-
   def create
     room = Room.new(room_params)
     if room.save
