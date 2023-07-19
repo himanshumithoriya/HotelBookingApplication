@@ -7,11 +7,13 @@ Rails.application.routes.draw do
   # root "articles#index"
   resources :locations
 
-  resources :owners
-  post '/owner/login', to: 'owners#login'
+  # resources :users
 
-  resources :customers
-  post '/customer/login', to: 'customers#login'
+  resources :owners
+  post '/user/login', to: 'users#login'
+
+  resource :customers
+  get '/customer/index', to: 'customers#index'
 
   resources :hotells
   get '/search_by_location', to: 'hotells#search_hotel_by_location'

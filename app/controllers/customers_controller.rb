@@ -1,8 +1,8 @@
 class CustomersController < ApiController
-  skip_before_action :customer_authenticate_request, only: [:create, :login]
-  skip_before_action :owner_authenticate_request
-  before_action :set_params, only: [:update, :destroy]
-
+  skip_before_action :authenticate_request, only: [:create]
+  skip_before_action :check_customer, only: [:create]
+  skip_before_action :check_owner
+    
   def index
     hotels =  if params[:status].present?
                 open_hotel()
@@ -15,6 +15,9 @@ class CustomersController < ApiController
       render json: hotels, status: :ok
     end
   end
+
+  def show
+  end
   
   def create
     customer = Customer.new(customer_params)
@@ -22,32 +25,17 @@ class CustomersController < ApiController
     render json: customer.errors.full_messages, status: :unprocessable_entity
   end
 
-  def login
-    customer = Customer.find_by(email: params[:email], password: params[:password])
-    if customer
-      token = jwt_encode(customer_id: customer.id)
-      render json: { token: token }, status: :ok
-    else
-      render json: { error: 'Unauthorized user' }, status: :unauthorized
-    end
-  end
-
   def update
-    if @customer
-      customer = @customer.update(customer_params)
-      render json: { message: 'Customer updated' }
-    end
-  rescue
-    render json: { message: 'Customer updation failed' }
+    @current_user.update(customer_params)
+    render json: { message: 'Customer updated' }
   end
 
   def destroy
-    if @customer
-      customer = @customer.destroy
+    if @current_user.destroy
       render json: { message: 'Customer deleted' }, status: :deleted
+    else
+      render json: { message: 'Customer deletion failed' }
     end
-  rescue
-    render json: { message: 'Customer deletion failed' }
   end
 
   private
@@ -55,13 +43,7 @@ class CustomersController < ApiController
     def customer_params
       params.permit(:name, :email, :password)
     end
-
-    def set_params
-      @customer = Customer.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      render json: { message: 'Id not found' }  
-    end
-
+   
     def open_hotel
       hotels = Hotell.where(status: params[:status])
     end

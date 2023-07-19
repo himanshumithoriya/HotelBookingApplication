@@ -1,5 +1,5 @@
 class RoomsController < ApiController
-  skip_before_action :customer_authenticate_request
+  skip_before_action :check_customer
   
   def create
     room = Room.new(room_params)

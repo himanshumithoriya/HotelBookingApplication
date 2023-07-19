@@ -1,5 +1,5 @@
 class HotellsController < ApiController
-	skip_before_action :customer_authenticate_request
+	skip_before_action :check_customer
 	before_action :set_params, only: [:show, :destroy]
 	 
  	def index
@@ -14,13 +14,13 @@ class HotellsController < ApiController
  	end
 
  	def show
- 		hotel = @current_owner.hotells
+ 		hotel = @current_user.hotells
  		return unless hotel.present?
 		render json: hotel
  	end
 
 	def create
-		hotel = @current_owner.hotells.new(hotel_params)
+		hotel = @current_user.hotells.new(hotel_params)
 	  if hotel.save
       render json: hotel, status: :created
     else
@@ -42,7 +42,7 @@ class HotellsController < ApiController
 		end
 
 		def set_params
-			@hotel = @current_owner.hotells.find(params[:id])
+			@hotel = @current_user.hotells.find(params[:id])
 		rescue ActiveRecord::RecordNotFound
 			render json: {message: "Id not found"}	
 		end

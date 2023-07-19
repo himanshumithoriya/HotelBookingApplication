@@ -1,6 +1,4 @@
 class Hotell < ApplicationRecord
-  # paginates_per 5
-  
   has_one_attached :image, dependent: :destroy
 
   belongs_to :location

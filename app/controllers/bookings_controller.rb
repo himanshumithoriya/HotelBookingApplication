@@ -1,5 +1,5 @@
 class BookingsController < ApiController
-	skip_before_action :owner_authenticate_request
+	skip_before_action :check_owner
 	before_action :set_params, only: [:show, :destroy]
 
 	def create
@@ -13,7 +13,7 @@ class BookingsController < ApiController
 		else
 			rooms = rooms.limit(required_rooms)
 			rooms.each do |room|
-				booking = @current_customer.bookings.new(booking_params)
+				booking = @current_user.bookings.new(booking_params)
 				booking.room_id = room.id
 				(member > 1)? booking.member = 2 : booking.member = 1
 				member -= 2
@@ -26,13 +26,13 @@ class BookingsController < ApiController
 	end
 
 	def index
-    bookings = @current_customer.bookings
+    bookings = @current_user.bookings
     return render json: { message: 'No Booking found' } unless bookings.present?
     render json: bookings, status: :ok
   end
 
   def filter_bookings_by_location
-    bookings = ActiveRecord::Base.connection.execute("select rooms.room_no, bookings.booking_aplhanumeric_id, bookings.member from bookings INNER JOIN users on users.id = bookings.user_id INNER JOIN rooms on rooms.id = bookings.room_id INNER JOIN hotells on hotells.id = rooms.hotell_id INNER JOIN locations on locations.id = hotells.location_id where users.id = #{@current_customer.id} and locations.name like '%#{params[:name]}%'")
+    bookings = ActiveRecord::Base.connection.execute("select rooms.room_no, bookings.booking_aplhanumeric_id, bookings.member from bookings INNER JOIN users on users.id = bookings.user_id INNER JOIN rooms on rooms.id = bookings.room_id INNER JOIN hotells on hotells.id = rooms.hotell_id INNER JOIN locations on locations.id = hotells.location_id where users.id = #{@current_user.id} and locations.name like '%#{params[:name]}%'")
     return render json: { message: 'booking not found' } unless bookings.present?
     render json: bookings, status: :ok
   end
