@@ -5,7 +5,7 @@ class OwnersController < ApiController
 
   def create
     owner = Owner.new(owner_params)
-    if @owner.save
+    if owner.save
       render json: owner, status: :ok
     else
       render json: { error: "Registration failed" }
