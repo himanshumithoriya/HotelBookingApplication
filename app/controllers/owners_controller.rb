@@ -4,23 +4,21 @@ class OwnersController < ApiController
   skip_before_action :check_owner, only: [:create]
 
   def create
-    owner = Owner.new(owner_params)
-    if owner.save
-      render json: owner, status: :ok
-    else
-      render json: { error: "Registration failed" }
-    end
+    # byebug
+    @owner = Owner.new(owner_params)
+    # respond_to do |format|
+      if @owner.save
+        byebug
+        OwnerMailer.with(owner: @owner).welcome_email.deliver_later
+        # format.html { redirect_to(@owner, notice: 'Owner was successfully created.') }
+        # format.json { render json: @owner, status: :created, location: @owner}
+        render json: @owner, status: :ok
+      else
+        # format.json { render json: @owner.errors, status: :unprocessable_entity }
+        render json: { error: "Registration failed" }
+      end
+    # end
   end
-
-  # def login
-  #   owner = Owner.find_by(email: params[:email], password: params[:password])
-  #   if owner
-  #     token = jwt_encode(owner_id: owner.id)
-  #     render json: { token: token }, status: :ok
-  #   else
-  #     render json: { error: 'Unauthorized user' }, status: :unauthorized
-  #   end
-  # end
 
   private
 
