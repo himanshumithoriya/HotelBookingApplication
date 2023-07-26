@@ -5,7 +5,7 @@ ActiveAdmin.register Room do
   #
   # Uncomment all parameters which should be permitted for assignment
   #
-  # permit_params :room_no, :room_category, :status, :occupancy, :hotell_id
+  permit_params :room_no, :room_category, :status, :occupancy, :hotell_id
   #
   # or
   #

@@ -16,9 +16,6 @@ class CustomersController < ApiController
     end
   end
 
-  def show
-  end
-  
   def create
     customer = Customer.new(customer_params)
     return render json: customer, status: :created if customer.save

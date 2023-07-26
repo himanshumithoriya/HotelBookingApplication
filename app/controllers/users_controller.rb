@@ -4,6 +4,7 @@ class UsersController < ApiController
 	skip_before_action :check_customer
 
 	def login
+		
 		user = User.find_by(email: params[:email], password: params[:password])
     if user
       token = jwt_encode(user_id: user.id)

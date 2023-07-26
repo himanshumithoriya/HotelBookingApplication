@@ -1,5 +1,7 @@
 class LocationsController < ApiController
 	skip_before_action :authenticate_request
+	skip_before_action :check_customer
+	skip_before_action :check_owner
 	before_action :set_params, only: [:show]
 	
 	def index
