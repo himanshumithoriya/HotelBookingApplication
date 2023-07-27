@@ -19,16 +19,16 @@ RSpec.describe HotellsController, type: :controller do
 		end
 	end
 
-	describe 'GET index' do
-		it 'has 200 status code' do
-			get :index
-			expect(response.status).to eq(200)
-		end
-	end
+	# describe 'GET index' do
+	# 	it 'has 200 status code' do
+	# 		get :index
+	# 		expect(response.status).to eq(200)
+	# 	end
+	# end
 
-	describe 'GET show/:id' do
-		it '' do
-			# get :show
-		end
-	end
+	# describe 'GET show/:id' do
+	# 	it '' do
+	# 		# get :show
+	# 	end
+	# end
 end

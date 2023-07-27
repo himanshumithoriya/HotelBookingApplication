@@ -350,4 +350,25 @@ ActiveAdmin.setup do |config|
   #
   # config.use_webpacker = true
 
+  config.download_links = [:csv, :xml, :json, :pdf]
+
+  config.namespace :admin do |admin|
+    admin.build_menu do |menu|
+      
+
+      menu.add label: "Other Usefull Sites" do |sites|
+        sites.add label: "Google",
+                  url: "https://google.com",
+                  html_options: { target: :blank }
+
+        sites.add label: "Facebook",
+                  url: "https://facebook.com"
+
+        sites.add label: "Github",
+                  url: "https://github.com"
+      end
+    end
+  end
+
+
 end

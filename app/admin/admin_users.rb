@@ -27,4 +27,35 @@ ActiveAdmin.register AdminUser do
     f.actions
   end
 
+  ActiveAdmin.setup do |config|
+    config.namespace :admin do |admin|
+      admin.build_menu :utility_navigation do |menu|
+        menu.add label: "ActiveAdmin.info", url: "https://www.activeadmin.info",
+                                            html_options: { target: :blank }
+        admin.add_current_user_to_menu  menu
+        admin.add_logout_button_to_menu menu
+      end
+    end
+  end
+
+  # config.namespace :admin do |admin|
+  #   admin.build_menu do |menu|
+  #     menu.add label: "The Application", url: "/", priority: 0
+
+  #     menu.add label: "Sites" do |sites|
+  #       sites.add label: "Google",
+  #                 url: "https://google.com",
+  #                 html_options: { target: :blank }
+
+  #       sites.add label: "Facebook",
+  #                 url: "https://facebook.com"
+
+  #       sites.add label: "Github",
+  #                 url: "https://github.com"
+  #     end
+  #   end
+  # end
+
+
+
 end

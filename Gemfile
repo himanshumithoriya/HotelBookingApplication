@@ -15,6 +15,14 @@ gem 'cancancan'
 
 gem 'pundit'
 
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+gem 'wkhtmltopdf-binary-edge'
+
+gem 'active_admin_flat_skin'
+
+gem 'font-awesome-rails'
+
 # gem 'rspec-rails'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"

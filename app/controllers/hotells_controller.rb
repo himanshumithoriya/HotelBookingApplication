@@ -20,8 +20,10 @@ class HotellsController < ApiController
  	end
 
 	def create
+		byebug
 		hotel = @current_user.hotells.new(hotel_params)
 	  if hotel.save
+	  	HotellMailer.with(hotel: hotel).hotell_mailer.deliver_later
       render json: hotel, status: :created
     else
       render json: { error: hotel.errors.full_messages }, status: :unprocessable_entity

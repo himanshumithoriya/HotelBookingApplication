@@ -2,7 +2,7 @@ require 'rails_helper'
 RSpec.describe Admin::HotellsController, type: :controller do
 	include Warden::Test::Helpers
 	render_views
-	# byebug
+	byebug
 	let(:admin_user) { FactoryBot.create(:admin_user) }
 	let(:location)  { FactoryBot.create(:location) }
 	let(:hotell) { FactoryBot.create(:hotell) }
