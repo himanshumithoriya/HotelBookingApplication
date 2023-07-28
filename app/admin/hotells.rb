@@ -23,6 +23,9 @@ ActiveAdmin.register Hotell do
     column :status
     column :location_id
     column :user_id
+    column :download do |hotell|
+      link_to 'Download PDF', hotell_path(hotell, format: :pdf)
+    end
     actions
   end
 
@@ -72,10 +75,18 @@ ActiveAdmin.register Hotell do
   controller do
     before_action only: :index do
       @per_page = 5
+    end
   end
-end
   
   # config.paginate = false
-
-
+  
+  controller do
+    def download_pdf
+      link_to(
+                'Download Membership Form',
+                download_pdf_admin_hotells_path(id: 1, format: :pdf)
+              )
+    end
+  end
+  
 end

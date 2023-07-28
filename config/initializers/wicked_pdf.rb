@@ -27,4 +27,6 @@ WickedPdf.config = {
   # 'xvfb-run' command, in order to simulate an X server.
   #
   # use_xvfb: true,
+  # :exe_path => '/usr/bin/wkhtmltopdf'
+  :exe_path => "#{ENV['GEM_HOME']}/bin/wkhtmltopdf"
 }

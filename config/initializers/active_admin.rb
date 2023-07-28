@@ -370,5 +370,5 @@ ActiveAdmin.setup do |config|
     end
   end
 
-
+  
 end

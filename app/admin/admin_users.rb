@@ -27,35 +27,35 @@ ActiveAdmin.register AdminUser do
     f.actions
   end
 
-  ActiveAdmin.setup do |config|
-    config.namespace :admin do |admin|
-      admin.build_menu :utility_navigation do |menu|
-        menu.add label: "ActiveAdmin.info", url: "https://www.activeadmin.info",
-                                            html_options: { target: :blank }
-        admin.add_current_user_to_menu  menu
-        admin.add_logout_button_to_menu menu
-      end
-    end
-  end
-
-  # config.namespace :admin do |admin|
-  #   admin.build_menu do |menu|
-  #     menu.add label: "The Application", url: "/", priority: 0
-
-  #     menu.add label: "Sites" do |sites|
-  #       sites.add label: "Google",
-  #                 url: "https://google.com",
-  #                 html_options: { target: :blank }
-
-  #       sites.add label: "Facebook",
-  #                 url: "https://facebook.com"
-
-  #       sites.add label: "Github",
-  #                 url: "https://github.com"
+  # ActiveAdmin.setup do |config|
+  #   config.namespace :admin do |admin|
+  #     admin.build_menu :utility_navigation do |menu|
+  #       menu.add label: "ActiveAdmin.info", url: "https://www.activeadmin.info",
+  #                                           html_options: { target: :blank }
+  #       admin.add_current_user_to_menu  menu
+  #       admin.add_logout_button_to_menu menu
   #     end
   #   end
   # end
 
+  # action_item :view_pdf, only: :show do
+  #   link_to 'View PDF', view_pdf_admin_product_path(resource), target: '_blank'
+  # end
+  # member_action :view_pdf, method: :get do
+  #   @product = Product.find(params[:id])
+  #   respond_to do |format|
+  #     format.pdf do
+  #       render pdf: "product_pdf",
+  #              template: "admin/products/view_pdf.pdf.erb", # Path to your custom PDF template
+  #              layout: 'pdf.html.erb', # Optional, specify your PDF layout
+  #              show_as_html: params.key?('debug') # For testing, set 'debug' parameter in the URL to true to see HTML output
+  #     end
+  #   end
+  # end
 
-
+# byebug
+#   link_to(
+#     'Download Membership Form',
+#     download_pdf_admin_users_path(id: object.id, format: :pdf)
+#   )
 end
