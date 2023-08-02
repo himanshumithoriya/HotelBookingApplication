@@ -23,9 +23,6 @@ ActiveAdmin.register Hotell do
     column :status
     column :location_id
     column :user_id
-    column :download do |hotell|
-      link_to 'Download PDF', hotell_path(hotell, format: :pdf)
-    end
     actions
   end
 
@@ -79,14 +76,23 @@ ActiveAdmin.register Hotell do
   end
   
   # config.paginate = false
-  
-  controller do
-    def download_pdf
-      link_to(
-                'Download Membership Form',
-                download_pdf_admin_hotells_path(id: 1, format: :pdf)
-              )
-    end
+
+  # member_action :download_pdf, method: :get do
+  #   @your_model = Hotell.find(params[:id])
+  #   pdf_content = render_to_string pdf: 'file_name_without_extension', template: 'admin/hotell/pdf_template', locals: { your_model: @your_model }
+  #   send_data(pdf_content, filename: "abc.pdf", type: 'application/pdf', disposition: 'attachment')
+  # end
+  # action_item :download_pdf, only: :show do
+  #   link_to 'Download PDF', download_pdf_admin_hotell_path(resource)
+  # end  
+
+  member_action :download_pdf, method: :get do
+    # @your_model = Hotell.find(params[:id])
+    @your_model = Hotell.all
+    pdf_content = render_to_string pdf: 'file_name_without_extension', template: 'admin/hotell/pdf_template', locals: { your_model: @your_model }
+    send_data(pdf_content, filename: "abc.pdf", type: 'application/pdf', disposition: 'attachment')
   end
-  
+  action_item :download_pdf, only: :index do
+    link_to 'Download PDF', download_pdf_admin_hotell_path("/hotells")
+  end  
 end

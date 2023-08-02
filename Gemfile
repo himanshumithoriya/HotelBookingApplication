@@ -19,9 +19,14 @@ gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 gem 'wkhtmltopdf-binary-edge'
 
+gem "whatsapp"  
+
 gem 'active_admin_flat_skin'
 
 gem 'font-awesome-rails'
+
+gem 'twilio-ruby'
+gem 'dotenv'
 
 # gem 'rspec-rails'
 
@@ -85,3 +90,7 @@ group :development do
 end
 
 gem 'warden'
+
+gem 'receipts'
+
+gem "matrix", "~> 0.4.2"

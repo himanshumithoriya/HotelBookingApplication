@@ -18,3 +18,11 @@
 
 @import "active_admin_flat_skin";
 @import "font-awesome";
+
+tr.odd, tr.even {
+    &.my-class {
+        td.col {
+            background-color: red;
+        }
+    }
+}

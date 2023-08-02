@@ -58,4 +58,6 @@ ActiveAdmin.register AdminUser do
 #     'Download Membership Form',
 #     download_pdf_admin_users_path(id: object.id, format: :pdf)
 #   )
+
+  
 end

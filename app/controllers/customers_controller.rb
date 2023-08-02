@@ -1,3 +1,4 @@
+require 'twilio_text_messenger'
 class CustomersController < ApiController
   skip_before_action :authenticate_request, only: [:create]
   skip_before_action :check_customer, only: [:create]
@@ -17,9 +18,21 @@ class CustomersController < ApiController
   end
 
   def create
+    byebug
     customer = Customer.new(customer_params)
-    return render json: customer, status: :created if customer.save
-    render json: customer.errors.full_messages, status: :unprocessable_entity
+      if customer.save!
+        # TwilioTextMessenger.new.send_text('+917223009254', 'Hello hi bye')
+        # TwilioTextMessenger.new.sms('+917223009254', 'Hello hi bye')
+        TwilioTextMessenger.new.sms()
+        # TwilioTextMessenger.new.send_text
+        # flash[:message] = "Customer, #{customer.name}, was successfully created!!!"
+        # t.call('+916261715665', 'Hello')
+        render json: customer, status: :created
+      else
+        render json: customer.errors.full_messages, status: :unprocessable_entity
+      end
+    # return render json: customer, status: :created if customer.save
+    # render json: customer.errors.full_messages, status: :unprocessable_entity
   end
 
   def update
